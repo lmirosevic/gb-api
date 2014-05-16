@@ -11,7 +11,7 @@ var thrift = require('thrift'),
     
 module.exports = {
   createThriftServer: function(thriftService, api) {
-    thrift.createServer(thriftService, errors.errorHandledAPI(api));
+    return thrift.createServer(thriftService, errors.errorHandledAPI(api));
   },
 
   errors: errors
