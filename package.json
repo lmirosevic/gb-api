@@ -1,0 +1,17 @@
+{
+	"name": "gb-api",
+	"description": "Goonbee's simple & error handled API wrapper for node.js based thrift services, so you can just get work done.",
+	"author" : "Luka Mirosevic <luka@goonbee.com>",
+	"version": "1.0.0",
+	"private": false,
+	"main": "api.js",
+	"repository": {
+		"type": "git",
+		"url": "http://github.com/lmirosevic/gb-api.git"
+	},
+	"dependencies": {
+		"thrift": "0.9.x",
+		"underscore": "1.6.x",
+		"cli-color": "0.3.x"
+	}
+}
