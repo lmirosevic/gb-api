@@ -13,5 +13,6 @@
 		"thrift": "0.9.x",
 		"underscore": "1.6.x",
 		"cli-color": "0.3.x"
-	}
+	},
+	"license": "Apache, Version 2.0"
 }
