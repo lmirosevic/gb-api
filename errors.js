@@ -47,7 +47,7 @@ var P = function() {
   this.logCallName = function(string) { return console.log('>>> ' + clc.blue(string)); };
 
   this.handleAndLogError = function(callback, err) {
-    var convertedError = p.getErrorMapper(err);
+    var convertedError = p.getErrorMapper()(err);
 
     // log error
     if (errors.getShouldLogErrors()) {
@@ -64,7 +64,7 @@ var P = function() {
     }
 
     // attempt to send error info to client
-    callback.call(callback, errors.getErrorMapper(err));
+    callback.call(callback, errors.getErrorMapper()(err));
   };
 
   this.getErrorMapper = function() {
