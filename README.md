@@ -1,5 +1,4 @@
-gb-api
-============
+# gb-api ![Version](https://img.shields.io/npm/v/gb-api.svg?style=flat)&nbsp;![License](https://img.shields.io/badge/license-Apache_2-green.svg?style=flat)
 
 Goonbee's simple & error handled API wrapper for node.js based thrift services, so you can just get work done.
 
