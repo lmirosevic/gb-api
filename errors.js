@@ -8,13 +8,15 @@
 
 //lm subsequent stack traces don't seem to show up
 
-var _ = require('underscore');
-    clc = require('cli-color');
+var _ = require('underscore'),
+    clc = require('cli-color'),
+    toolbox = require('gb-toolbox');
 
 var errorTypes = module.exports.errorTypes = {};
 
 var P = function() {
-  var _errorMapper = function(input) { return input; };
+  var _errorMapper;
+  var _errorMapping = {};
 
   this.makeError = function(type) {
     var NewError = function () {
@@ -47,7 +49,7 @@ var P = function() {
   this.logCallName = function(string) { return console.log('>>> ' + clc.blue(string)); };
 
   this.handleAndLogError = function(callback, err) {
-    var convertedError = p.getErrorMapper()(err);
+    var convertedError = _errorMapper(err);
 
     // log error
     if (errors.getShouldLogErrors()) {
@@ -64,22 +66,36 @@ var P = function() {
     }
 
     // attempt to send error info to client
-    callback.call(callback, errors.getErrorMapper()(err));
+    callback.call(callback, _errorMapper(err));
   };
 
-  this.getErrorMapper = function() {
-    return _errorMapper;
+  this.getErrorMapping = function() {
+    return _errorMapping;
   };
 
-  this.setErrorMapper = function(errorMapper) {
-    _errorMapper = errorMapper;
+  this.setErrorMapping = function(errorMapping, fallback) {
+    toolbox.requiredArguments(errorMapping, fallback);
+
+    // store the mapping
+    _errorMapping = errorMapping;
+
+    // set the mapper
+    _errorMapper = function(err) {
+      var mappedStatus = errorMapping[typeof err];
+      if (mappedStatus) {
+        return new ttypes.RequestError({status: mappedStatus, message: err.message});
+      }
+      else {
+        return fallback;
+      }
+    };
   };
 };
 var p = new P();
 
 var errors = {
-  setErrorMapper: p.setErrorMapper,
-  getErrorMapper: p.getErrorMapper,
+  setErrorMapping: p.setErrorMapping,
+  getErrorMapping: p.getErrorMapping,
   setShouldLogOutput: function(shouldLogOutput) {
     p.shouldLogOutput = shouldLogOutput;
   },
@@ -137,4 +153,7 @@ var errors = {
 _.extend(module.exports, errors);
 
 p.makeError('GenericError');
+p.makeError('MalformedRequestError');
 p.makeError('AuthenticationError');
+p.makeError('AuthorizationError');
+p.makeError('PhasedOutError');
