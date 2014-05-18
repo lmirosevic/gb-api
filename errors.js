@@ -73,20 +73,23 @@ var P = function() {
     return _errorMapping;
   };
 
-  this.setErrorMapping = function(errorMapping, fallback) {
-    toolbox.requiredArguments(errorMapping, fallback);
+  this.setErrorMapping = function(errorMapping, errorInstantiator, fallbackError) {
+    toolbox.requiredArguments(errorMapping, errorInstantiator, fallbackError);
 
     // store the mapping
     _errorMapping = errorMapping;
 
     // set the mapper
     _errorMapper = function(err) {
-      var mappedStatus = errorMapping[typeof err];
+      mappedStatus = _.find(errorMapping, function(mappedStatus, errorType) {
+        return (err instanceof(errorTypes[errorType]));
+      });
+
       if (mappedStatus) {
-        return new ttypes.RequestError({status: mappedStatus, message: err.message});
+        return errorInstantiator(mappedStatus, err.message);
       }
       else {
-        return fallback;
+        return fallbackError;
       }
     };
   };
