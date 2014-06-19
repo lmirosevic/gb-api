@@ -18,6 +18,14 @@ var P = function() {
   var _errorMapper;
   var _errorMapping = {};
 
+  this.shouldLogOutput = false;
+
+  this.shouldLogCalls = false;
+
+  this.shouldLogErrors = false;
+
+  this.loggingFunction = console.log;
+
   this.makeError = function(type) {
     var NewError = function () {
       var tmp = Error.apply(this, arguments);
@@ -34,19 +42,13 @@ var P = function() {
     errorTypes[type] = NewError;
   };
 
-  this.shouldLogOutput = false;
+  this.logRed = function(string) { return this.loggingFunction(clc.red(string)); };
 
-  this.shouldLogCalls = false;
+  this.logBlue = function(string) { return this.loggingFunction(clc.blue(string)); };
 
-  this.shouldLogErrors = false;
+  this.logPlain = function(string) { return this.loggingFunction(string); };
 
-  this.logRed = function(string) { return console.log(clc.red(string)); };
-
-  this.logBlue = function(string) { return console.log(clc.blue(string)); };
-
-  this.logPlain = function(string) { return console.log(string); };
-
-  this.logCallName = function(string) { return console.log('>>> ' + clc.blue(string)); };
+  this.logCallName = function(string) { return this.loggingFunction('>>> ' + clc.blue(string)); };
 
   this.handleAndLogError = function(callback, err) {
     var convertedError = _errorMapper(err);
@@ -116,6 +118,9 @@ var errors = {
   },
   getShouldLogErrors: function() {
     return p.shouldLogErrors;
+  },
+  setLoggingFunction: function(loggingFunction) {
+    p.loggingFunction = loggingFunction;
   },
   errorHandledAPI: function(apiObject) {
     return _.object(_.map(apiObject, function(originalFunction, callName) {
