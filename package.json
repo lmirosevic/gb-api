@@ -10,7 +10,7 @@
 		"url": "http://github.com/lmirosevic/gb-api.git"
 	},
 	"dependencies": {
-		"thrift": "0.9.x",
+		"thrift": "0.9.1",
 		"underscore": "1.6.x",
 		"cli-color": "0.3.x",
 		"gb-toolbox": "1.x"
